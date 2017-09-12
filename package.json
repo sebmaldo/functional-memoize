@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/sebmaldo/functional-memoize/issues"
   },
-  "homepage": "https://github.com/sebmaldo/functional-memoize#readme"
+  "homepage": "https://github.com/sebmaldo/functional-memoize#readme",
+  "dependencies": {
+    "rambda": "^0.9.0"
+  }
 }
