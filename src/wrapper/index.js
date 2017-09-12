@@ -6,14 +6,21 @@
 
 const R = require('rambda');
 const moment = require('moment');
+const getTtlMeasure = R.defaultTo('days');
 
-let isCachedExpired = (ttl, cached) => {
+let isExpired = R.curry((ttl, ttlMeasure, timestamp) => {
+    return moment(new Date())
+        .isAfter(
+            moment(timestamp)
+            .add(ttl, getTtlMeasure(ttlMeasure))
+        );
+});
+
+let isCachedInvalid = (ttl, ttlMeasure, cached) => {
 
     return R.isNil(cached)
         || R.isNil(cached.timestamp)
-        || moment(new Date()).isAfter(
-            moment(cached.timestamp).add(ttl, 'seconds')
-        );
+        || isExpired(ttl, ttlMeasure, cached.timestamp);
 }
 
 let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) => {
@@ -21,7 +28,7 @@ let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) 
         let key = JSON.stringify(R.append(memoizeConfigOptions.serviceName, args));
         let cached = await findInCache(key);
         
-        if(isCachedExpired(memoizeConfigOptions.ttl, cached)){
+        if(isCachedInvalid(memoizeConfigOptions.ttl, memoizeConfigOptions.ttlMeasure, cached)){
             let result = await functionToMemoize(args);
             await saveInCache(key, new Date(), result);
             return result;

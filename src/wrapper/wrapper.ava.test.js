@@ -4,20 +4,20 @@ const moment = require('moment');
 
 let mem = rewire('./');
 
-let isCachedExpired = mem.__get__('isCachedExpired');
+let isCachedInvalid = mem.__get__('isCachedInvalid');
 
 test('The cache null must return true', t => {
-    t.is(isCachedExpired(1000, null), true);
+    t.is(isCachedInvalid(1000, null), true);
 });
 
 test('The cache without timestamp must return true', t => {
-    t.is(isCachedExpired(1000, {}), true);
+    t.is(isCachedInvalid(1000, {}), true);
 });
 
 test('The cache of an old date must be true', t => {
-    t.is(isCachedExpired(1000, {timestamp: moment().subtract(5000, 'seconds').toDate()}), true);
+    t.is(isCachedInvalid(1000, 'seconds', {timestamp: moment().subtract(5000, 'seconds').toDate()}), true);
 });
 
 test('The cache of a current date must be false', t => {
-    t.is(isCachedExpired(1000, {timestamp: moment().add(5000, 'seconds').toDate()}), false);
+    t.is(isCachedInvalid(1000, 'seconds', {timestamp: moment().add(5000, 'seconds').toDate()}), false);
 });
