@@ -1,0 +1,29 @@
+{
+  "name": "functional-memoize",
+  "version": "0.0.1",
+  "description": "A module for the memoization of functions from a functional programming point of view, this module let you manage the cache type and strategy to use.",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebmaldo/functional-memoize.git"
+  },
+  "keywords": [
+    "memoization",
+    "memoize",
+    "cache",
+    "cache-manager",
+    "manager",
+    "functional",
+    "programming",
+    "cached"
+  ],
+  "author": "Sebastián Maldonado",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sebmaldo/functional-memoize/issues"
+  },
+  "homepage": "https://github.com/sebmaldo/functional-memoize#readme"
+}
