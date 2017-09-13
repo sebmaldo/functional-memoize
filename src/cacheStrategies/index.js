@@ -1,3 +1,3 @@
 module.exports = {
-    inMemory = require('./inMemory')
+    inMemory: require('./inMemory')
 }
