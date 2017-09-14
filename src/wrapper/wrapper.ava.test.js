@@ -3,6 +3,7 @@ const rewire = require('rewire');
 const moment = require('moment');
 const wrapper = require('./');
 const cachedStrategies = require('../cacheStrategies');
+const Promise = require('bluebird');
 
 let mem = rewire('./');
 
@@ -21,6 +22,12 @@ let cachedFunction = wrapper(cachedStrategies.inMemory.find
 let cachedFunction2 = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
     , {ttl: 2, ttlMeasure: 'days', serviceName: 'stringFunction2'}
+    , randomString
+);
+
+let shortCachedFunction = wrapper(cachedStrategies.inMemory.find
+    , cachedStrategies.inMemory.save
+    , {ttl: 1, ttlMeasure: 'seconds', serviceName: 'stringFunction'}
     , randomString
 );
 
@@ -58,4 +65,26 @@ test('Call different cached must return different results', async t => {
         let result2 = await cachedFunction2(10);
     
         t.is(result === result2, false);
+});
+
+test('Call different cached must return different results and call same functions must return same return', async t => {
+    let result = await cachedFunction(11);
+    let result2 = await cachedFunction2(11);
+    let result3 = await cachedFunction(11);
+    let result4 = await cachedFunction2(11);
+
+    t.is(result === result2, false);
+    t.is(result3 === result4, false);
+    t.is(result === result3, true);
+    t.is(result2 === result4, true);
+});
+
+test('Call different cached must return different results', async t => {
+    let result = await shortCachedFunction(12);
+    let result2 = await Promise.delay(100).then(()=> shortCachedFunction(12));
+    t.is(result === result2, true);
+    let result3 = await Promise.delay(1100).then(()=> shortCachedFunction(12));
+
+
+    t.is(result === result3, false);
 });
