@@ -7,7 +7,18 @@
 const R = require('rambda');
 const moment = require('moment');
 const getTtlMeasure = R.defaultTo('days');
+const ttlDefault = R.defaultTo(1);
 
+
+/**
+ * Check if a cached item is valid to return as result
+ * 
+ * @param {number} ttl - The duration of the time to live if it's not set it default to 1.
+ * @param {string} ttlMeasure - The measure of the time to live, it use the same as moment,
+ * as default it use days.
+ * @param {object} cached - The cached Item returned from the cache strategy.
+ * It have to be and object and have the attribute timestamp.
+ */
 let isCachedInvalid = (ttl, ttlMeasure, cached) => {
 
         //Check if the cache exists
@@ -18,13 +29,46 @@ let isCachedInvalid = (ttl, ttlMeasure, cached) => {
         || moment(new Date())
             .isAfter(
             moment(cached.timestamp)
-                .add(ttl, getTtlMeasure(ttlMeasure))
+                .add(ttlDefault(ttl), getTtlMeasure(ttlMeasure))
             );
 }
 
-let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) => {
-    return async (...args) => {
+/**
+ * Function to check the signature of the wrapper.
+ * 
+ * @param {function} find - Function of the find strategy cache, to check.
+ * @param {function} save - Function of the save strategy cache, to check.
+ * @param {object} config - Object to configure the cache time to live, and service that represents, to check.
+ * @param {function} service - Function to memoize, to check.
+ */
+let checkSignatureOfFunction = (find, save, config, service) => {
+    if('function' !== typeof(find)){
+        throw new TypeError('The findInCache (1th argument) must be a function.');
+    }
 
+    if('function' !== typeof(save)){
+        throw new TypeError('The saveInCache (2th argument) must be a function.');
+    }
+
+    if('object' !== typeof(config)){
+        throw new TypeError('The memoizeConfigOptions (3th argument) must be an object.');
+    }
+
+    if('function' !== typeof(service)){
+        throw new TypeError('The functionToMemoize (4th argument) must be a function.');
+    }
+}
+
+/**
+ * 
+ * @param {function} findInCache - Function to find in the cache implemented.
+ * @param {function} saveInCache - Function to save in the cache implemented.
+ * @param {object} memoizeConfigOptions - Object to configure the cahe options
+ * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
+ */
+let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) => {
+    checkSignatureOfFunction(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize);
+    return async (...args) => {
         //Create the key, with the arguments of the function and the service name
         let key = JSON.stringify(R.append(memoizeConfigOptions.serviceName, args));
         //Search in the cache stategy provided in the function

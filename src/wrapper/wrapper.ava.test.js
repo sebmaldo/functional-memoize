@@ -83,8 +83,15 @@ test('Call different cached must return different results', async t => {
     let result = await shortCachedFunction(12);
     let result2 = await Promise.delay(100).then(()=> shortCachedFunction(12));
     t.is(result === result2, true);
-    let result3 = await Promise.delay(1100).then(()=> shortCachedFunction(12));
+    let result3 = await Promise.delay(1500).then(()=> shortCachedFunction(12));
 
 
     t.is(result === result3, false);
+});
+
+test('For a diferent signature must return an exception', async t => {
+    t.throws(()=> {wrapper({}, ()=> 1, {}, ()=>2);});
+    t.throws(()=> {wrapper(()=> 1, {}, {}, ()=>2);});
+    t.throws(()=> {wrapper(()=> 1, ()=> 2, ()=> 3, ()=>4);});
+    t.throws(()=> {wrapper(()=> 1, ()=> 2, {}, {});});
 });
