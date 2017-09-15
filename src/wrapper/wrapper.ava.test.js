@@ -15,19 +15,19 @@ function randomString(largo) {
 
 let cachedFunction = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , {ttl: 2, ttlMeasure: 'days', serviceName: 'stringFunction'}
+    , {ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction'}
     , randomString
 );
 
 let cachedFunction2 = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , {ttl: 2, ttlMeasure: 'days', serviceName: 'stringFunction2'}
+    , {ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction2'}
     , randomString
 );
 
 let shortCachedFunction = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , {ttl: 1, ttlMeasure: 'seconds', serviceName: 'stringFunction'}
+    , {ttl: 1, ttlMeasure: 'seconds', functionName: 'stringFunction'}
     , randomString
 );
 
@@ -83,7 +83,7 @@ test('Call different cached must return different results', async t => {
     let result = await shortCachedFunction(12);
     let result2 = await Promise.delay(100).then(()=> shortCachedFunction(12));
     t.is(result === result2, true);
-    let result3 = await Promise.delay(1500).then(()=> shortCachedFunction(12));
+    let result3 = await Promise.delay(2000).then(()=> shortCachedFunction(12));
 
 
     t.is(result === result3, false);
