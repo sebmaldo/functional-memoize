@@ -29,6 +29,7 @@
   "homepage": "https://github.com/sebmaldo/functional-memoize#readme",
   "dependencies": {
     "moment": "^2.18.1",
+    "monk": "^6.0.4",
     "rambda": "^0.9.0"
   },
   "devDependencies": {

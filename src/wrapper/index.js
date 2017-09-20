@@ -93,4 +93,16 @@ let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) 
     }
 }
 
+/**
+ * Function to wrapp the function to made the memoization with a provided cache strategy.
+ * 
+ * @param {function} findInCache - Function to find in the cache implemented.
+ * @param {function} saveInCache - Function to save in the cache implemented.
+ * @param {object} memoizeConfigOptions - Object to configure the cahe options.
+ * @param {number} memoizeConfigOptions.ttl - Time to live for the memoization by default is 1.
+ * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment 
+ * (miliseconds, seconds, minutes, hours, days ...) by default is days.
+ * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
+ * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
+ */
 module.exports = R.curry(wrapp);
