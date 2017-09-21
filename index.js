@@ -12,7 +12,8 @@ const strategies = require('./src/cacheStrategies');
 module.exports = {
     /**
      * Curriable function to wrapp the function to be memoized with a provided cache strategy.
-     * 
+     * @function 
+     * @name cacheWrapper
      * @param {function} findInCache - Function to find in the cache implemented.
      * @param {function} saveInCache - Function to save in the cache implemented.
      * @param {object} memoizeConfigOptions - Object to configure the cahe options.
@@ -21,6 +22,8 @@ module.exports = {
      * (miliseconds, seconds, minutes, hours, days ...) by default is days.
      * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
+     * @returns {function} - Async function that wrapp the functionToMemoize with the strategy of cache.
+     * This function return Promises. 
      */
     cacheWrapper: wrapper,
 
