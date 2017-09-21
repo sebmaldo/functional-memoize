@@ -7,11 +7,9 @@ from a functional programming point of view.
 
 
 * [functional-memoize](#module_functional-memoize)
-    * _static_
-        * [.inMemoryCacheWrapper](#module_functional-memoize.inMemoryCacheWrapper)
-        * [.inMongoCacheWrapper](#module_functional-memoize.inMongoCacheWrapper)
-    * _inner_
-        * [~cacheWrapper(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize)](#module_functional-memoize..cacheWrapper) ⇒ <code>function</code>
+    * [.inMemoryCacheWrapper](#module_functional-memoize.inMemoryCacheWrapper)
+    * [.inMongoCacheWrapper](#module_functional-memoize.inMongoCacheWrapper)
+    * [.cacheWrapper(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize)](#module_functional-memoize.cacheWrapper) ⇒ <code>function</code>
 
 <a name="module_functional-memoize.inMemoryCacheWrapper"></a>
 
@@ -45,12 +43,12 @@ Curriable function to wrapp the function to be memoized with a mongodb cache str
 | memoizeConfigOptions.functionName | <code>string</code> | The Implementation consider a unique cached. |
 | functionToMemoize | <code>function</code> | Function to be memoized by the cache wrapper. |
 
-<a name="module_functional-memoize..cacheWrapper"></a>
+<a name="module_functional-memoize.cacheWrapper"></a>
 
-### functional-memoize~cacheWrapper(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) ⇒ <code>function</code>
+### functional-memoize.cacheWrapper(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) ⇒ <code>function</code>
 Curriable function to wrapp the function to be memoized with a provided cache strategy.
 
-**Kind**: inner method of [<code>functional-memoize</code>](#module_functional-memoize)  
+**Kind**: static method of [<code>functional-memoize</code>](#module_functional-memoize)  
 **Returns**: <code>function</code> - - Async function that wrapp the functionToMemoize with the strategy of cache.
 This function return Promises.  
 
