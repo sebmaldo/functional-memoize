@@ -1,6 +1,6 @@
 {
   "name": "functional-memoize",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A module for the memoization of functions from a functional programming point of view, this module let you manage the cache type and strategy to use.",
   "main": "index.js",
   "scripts": {
