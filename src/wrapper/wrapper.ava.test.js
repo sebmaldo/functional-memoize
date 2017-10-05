@@ -15,19 +15,19 @@ function randomString(largo) {
 
 let cachedFunction = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , {ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction'}
+    , { ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction' }
     , randomString
 );
 
 let cachedFunction2 = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , {ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction2'}
+    , { ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction2' }
     , randomString
 );
 
 let shortCachedFunction = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , {ttl: 1, ttlMeasure: 'seconds', functionName: 'stringFunction'}
+    , { ttl: 1, ttlMeasure: 'seconds', functionName: 'stringFunction' }
     , randomString
 );
 
@@ -40,14 +40,18 @@ test('The cache without timestamp must return true', t => {
 });
 
 test('The cache of an old date must be true', t => {
-    t.is(isCachedInvalid(1000, 'seconds', {timestamp: moment().subtract(5000, 'seconds').toDate()}), true);
+    t.is(isCachedInvalid(
+        1000, 'seconds', {
+            timestamp: moment().subtract(5000, 'seconds').toDate()
+        }), true);
 });
 
 test('The cache of a current date must be false', t => {
-    t.is(isCachedInvalid(1000, 'seconds', {timestamp: moment().add(5000, 'seconds').toDate()}), false);
+    t.is(isCachedInvalid(
+        1000, 'seconds', {
+            timestamp: moment().add(5000, 'seconds').toDate()
+        }), false);
 });
-
-
 
 
 test('Call two time a function must return the same result', async t => {
@@ -60,14 +64,15 @@ test('Call two time a function must return the same result', async t => {
     t.is(result3, result4);
 });
 
+
 test('Call different cached must return different results', async t => {
-        let result = await cachedFunction(10);
-        let result2 = await cachedFunction2(10);
-    
-        t.is(result === result2, false);
+    let result = await cachedFunction(10);
+    let result2 = await cachedFunction2(10);
+
+    t.is(result === result2, false);
 });
 
-test('Call different cached must return different results and call same functions must return same return', async t => {
+test('Diff cached must return diff results and call same functions with same return', async t => {
     let result = await cachedFunction(11);
     let result2 = await cachedFunction2(11);
     let result3 = await cachedFunction(11);
@@ -81,17 +86,25 @@ test('Call different cached must return different results and call same function
 
 test('Call different cached must return different results', async t => {
     let result = await shortCachedFunction(12);
-    let result2 = await Promise.delay(100).then(()=> shortCachedFunction(12));
+    let result2 = await Promise.delay(100).then(() => shortCachedFunction(12));
     t.is(result === result2, true);
-    let result3 = await Promise.delay(2000).then(()=> shortCachedFunction(12));
+    let result3 = await Promise.delay(2000).then(() => shortCachedFunction(12));
 
 
     t.is(result === result3, false);
 });
 
 test('For a diferent signature must return an exception', async t => {
-    t.throws(()=> {wrapper({}, ()=> 1, {}, ()=>2);});
-    t.throws(()=> {wrapper(()=> 1, {}, {}, ()=>2);});
-    t.throws(()=> {wrapper(()=> 1, ()=> 2, ()=> 3, ()=>4);});
-    t.throws(()=> {wrapper(()=> 1, ()=> 2, {}, {});});
+    t.throws(() => {
+        wrapper({}, () => 1, {}, () => 2);
+    });
+    t.throws(() => {
+        wrapper(() => 1, {}, {}, () => 2);
+    });
+    t.throws(() => {
+        wrapper(() => 1, () => 2, () => 3, () => 4);
+    });
+    t.throws(() => {
+        wrapper(() => 1, () => 2, {}, {});
+    });
 });

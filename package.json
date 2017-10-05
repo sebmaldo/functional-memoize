@@ -4,8 +4,8 @@
   "description": "A module for the memoization of functions from a functional programming point of view, this module let you manage the cache type and strategy to use.",
   "main": "index.js",
   "scripts": {
-    "test": "ava **/*.ava.test.js",
-    "test:watch": "ava **/*.ava.test.js --watch"
+    "test": "ava **/*.ava.test.js --verbose",
+    "test:watch": "ava **/*.ava.test.js --verbose --watch"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "bluebird": "^3.5.0",
+    "eslint": "^4.8.0",
     "rewire": "^2.5.2"
   }
 }

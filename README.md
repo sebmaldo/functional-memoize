@@ -24,9 +24,9 @@ This function is always async, return a Promise.
 | --- | --- | --- |
 | findInCache | <code>function</code> | Function to find in the cache implemented. |
 | saveInCache | <code>function</code> | Function to save in the cache implemented. |
-| memoizeConfigOptions | <code>object</code> | Object to configure the cahe options. |
+| memoizeConfigOptions | <code>object</code> | Object to configure the cache options. |
 | memoizeConfigOptions.ttl | <code>number</code> | Time to live for the memoization by default is 1. |
-| memoizeConfigOptions.ttlMeasure | <code>string</code> | Measure of the time to live, ir use the same as moment  (miliseconds, seconds, minutes, hours, days ...) by default is days. |
+| memoizeConfigOptions.ttlMeasure | <code>string</code> | Measure of the time to live, it use the same as moment  (miliseconds, seconds, minutes, hours, days ...) by default is days. |
 | memoizeConfigOptions.functionName | <code>string</code> | The Implementation consider a unique cached. |
 | functionToMemoize | <code>function</code> | Function to be memoized by the cache wrapper. |
 
