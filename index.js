@@ -1,6 +1,6 @@
 /**
- * Functional Memoize is a package to implement an 
- * approach of a generic memoization of functions 
+ * Functional Memoize is a package to implement an
+ * approach of a generic memoization of functions
  * from a functional programming point of view.
  * @module functional-memoize
  */
@@ -18,50 +18,53 @@ module.exports = {
      * @param {function} saveInCache - Function to save in the cache implemented.
      * @param {object} memoizeConfigOptions - Object to configure the cahe options.
      * @param {number} memoizeConfigOptions.ttl - Time to live for the memoization by default is 1.
-     * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment 
+     * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment
      * (miliseconds, seconds, minutes, hours, days ...) by default is days.
      * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
-     * This function is always async, return a Promise. 
+     * This function is always async, return a Promise.
      */
     cacheWrapper: wrapper,
 
     /**
      * Curriable function to wrapp the function to be memoized with a in Memory cache strategy.
-     * @kind function 
+     * @kind function
      * @param {object} memoizeConfigOptions - Object to configure the cahe options.
      * @param {number} memoizeConfigOptions.ttl - Time to live for the memoization by default is 1.
-     * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment 
+     * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment
      * (miliseconds, seconds, minutes, hours, days ...) by default is days.
      * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
-     * This function is always async, return a Promise. 
+     * This function is always async, return a Promise.
      */
     inMemoryCacheWrapper: wrapper(strategies.find, strategies.save),
 
     /**
      * Curriable function to wrapp the function to be memoized with a mongodb cache strategy.
      * @kind function
-     * @param {string} mongodbUri - MongoDB url connection string.
-     * @param {string} mongodbCacheCollection - Name of the mongoDB collection.
-     * @param {object} memoizeConfigOptions - Object to configure the cahe options.
-     * @param {number} memoizeConfigOptions.ttl - Time to live for the memoization by default is 1.
-     * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment 
+     * @param {Object} mongoDBConfig - MongoDB configuration options.
+     * @param {String} mongoDBConfig.mongodbUri - mongoDB connection string.
+     * @param {String} mongoDBConfig.mongodbCacheCollection - Name of the mongoDB collection.
+     * @param {Object} memoizeConfigOptions - Object to configure the cahe options.
+     * @param {Number} memoizeConfigOptions.ttl - Time to live for the memoization by default is 1.
+     * @param {String} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment
      * (miliseconds, seconds, minutes, hours, days ...) by default is days.
-     * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
+     * @param {String} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
-     * This function is always async, return a Promise. 
+     * This function is always async, return a Promise.
      */
     inMongoCacheWrapper: R.curry((
-        mongodbUri,
-        mongodbCacheCollection,
+        mongoDBConfig,
         memoizeConfigOptions,
         functionToMemoize
     ) => {
-        const mongoStrategy = strategies.inMongo(mongodbUri, mongodbCacheCollection);
+        const mongoStrategy = strategies.inMongo(
+            mongoDBConfig.mongodbUri,
+            mongoDBConfig.mongodbCacheCollection
+        );
         return wrapper(
             mongoStrategy.find,
             mongoStrategy.save,

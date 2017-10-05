@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+
+  # Memoize application
+  memoize_app:
+    container_name: Memoize
+    tty: true
+    links:
+      - mongo
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile
+    volumes:
+        - "./src:/opt/app/src"
+    command: dockerize -wait tcp://mongo:27017 /bin/sh -c "npm run test:all:watch"
+
+  # MongoDB database service configuration
+  mongo:
+    container_name: mongo_memoize
+    image: mongo
+    volumes:
+      - ./storage/mongodb/db:/data/db
+    ports:
+      - "27017:27017"

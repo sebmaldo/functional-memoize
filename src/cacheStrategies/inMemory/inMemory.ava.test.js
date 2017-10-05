@@ -47,7 +47,7 @@ test('Must return object in memory', async t => {
     ]);
 
     let output = { foo: 'claro que si' };
-    
+
     await save(key, new Date(), { other: 'other value' });
     await save(key, new Date(), output);
     await save(JSON.stringify([

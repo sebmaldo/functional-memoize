@@ -5,10 +5,10 @@ module.exports = (mongodbUri, mongodbCache = 'MONGODB_CACHE') => {
 
     return {
         find: async (key) => {
-            return collection.findOne({ key });
+            return await collection.findOne({ key });
         },
         save: async (key, timestamp, result) => {
-            return collection.insert({ key, timestamp, result });
+            return await collection.insert({ key, timestamp, result });
         }
     };
 };
