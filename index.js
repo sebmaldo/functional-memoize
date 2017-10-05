@@ -7,6 +7,7 @@
 
 const wrapper = require('./src/wrapper');
 const strategies = require('./src/cacheStrategies');
+const R = require('ramda');
 
 
 module.exports = {
@@ -39,7 +40,7 @@ module.exports = {
      * This function is always async, return a Promise. 
      */
     inMemoryCacheWrapper: wrapper(strategies.find, strategies.save),
-    
+
     /**
      * Curriable function to wrapp the function to be memoized with a mongodb cache strategy.
      * @kind function
@@ -54,9 +55,18 @@ module.exports = {
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
      * This function is always async, return a Promise. 
      */
-    inMongoCacheWrapper: R.curry((mongodbUri, mongodbCacheCollection, memoizeConfigOptions, functionToMemoize) => {
+    inMongoCacheWrapper: R.curry((
+        mongodbUri,
+        mongodbCacheCollection,
+        memoizeConfigOptions,
+        functionToMemoize
+    ) => {
         const mongoStrategy = strategies.inMongo(mongodbUri, mongodbCacheCollection);
-        return wrapper(mongoStrategy.find, mongoStrategy.save, memoizeConfigOptions, functionToMemoize);
-        
+        return wrapper(
+            mongoStrategy.find,
+            mongoStrategy.save,
+            memoizeConfigOptions,
+            functionToMemoize
+        );
     })
 };
