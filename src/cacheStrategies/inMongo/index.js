@@ -7,8 +7,8 @@ module.exports = (mongodbUri, mongodbCache = 'MONGODB_CACHE') => {
         find: async (key) => {
             return collection.findOne({ key });
         },
-        save: async (key, date, resultToCache) => {
-            return collection.insert({ key, timestamp: date, result: resultToCache });
+        save: async (key, timestamp, result) => {
+            return collection.insert({ key, timestamp, result });
         }
     };
 };

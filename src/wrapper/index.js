@@ -23,8 +23,8 @@ let isCachedInvalid = (ttl, ttlMeasure, cached) => {
         //check if the date of the timestamp is acording with the time to live
         || moment(new Date())
             .isAfter(
-            moment(cached.timestamp)
-                .add(ttlDefault(ttl), getTtlMeasure(ttlMeasure))
+                moment(cached.timestamp)
+                    .add(ttlDefault(ttl), getTtlMeasure(ttlMeasure))
             );
 };
 

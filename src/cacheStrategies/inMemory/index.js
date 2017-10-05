@@ -6,8 +6,8 @@ module.exports = {
         //return the Attribute with the name in the variable key
         return cache[key];
     },
-    save: async (key, date, resultToCache) => {
+    save: async (key, timestamp, result) => {
         //Store an attribute in the object cache in the attribute key, with a timestamp and the result.
-        cache[key] = {timestamp: date, result: resultToCache};
+        cache[key] = {timestamp, result};
     }
 };

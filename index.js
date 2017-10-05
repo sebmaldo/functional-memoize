@@ -44,8 +44,8 @@ module.exports = {
     /**
      * Curriable function to wrapp the function to be memoized with a mongodb cache strategy.
      * @kind function
-     * @param {string} mongodbUri - Function to find in the cache implemented.
-     * @param {string} mongodbCacheCollection - Function to save in the cache implemented.
+     * @param {string} mongodbUri - MongoDB url connection string.
+     * @param {string} mongodbCacheCollection - Name of the mongoDB collection.
      * @param {object} memoizeConfigOptions - Object to configure the cahe options.
      * @param {number} memoizeConfigOptions.ttl - Time to live for the memoization by default is 1.
      * @param {string} memoizeConfigOptions.ttlMeasure - Measure of the time to live, ir use the same as moment 
