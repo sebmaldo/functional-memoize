@@ -1,13 +1,7 @@
 import test from 'ava';
-const rewire = require('rewire');
-const moment = require('moment');
-const wrapper = require('./');
-const cachedStrategies = require('../cacheStrategies');
+const wrapper = require('../');
+const cachedStrategies = require('../../cacheStrategies');
 const Promise = require('bluebird');
-
-let mem = rewire('./');
-
-let isCachedInvalid = mem.__get__('isCachedInvalid');
 
 function randomString(largo) {
     return Math.random().toString(36).substring(largo);
@@ -31,29 +25,6 @@ let shortCachedFunction = wrapper(cachedStrategies.inMemory.find
     , randomString
 );
 
-test('The cache null must return true', t => {
-    t.is(isCachedInvalid(1000, null), true);
-});
-
-test('The cache without timestamp must return true', t => {
-    t.is(isCachedInvalid(1000, {}), true);
-});
-
-test('The cache of an old date must be true', t => {
-    t.is(isCachedInvalid(
-        1000, 'seconds', {
-            timestamp: moment().subtract(5000, 'seconds').toDate()
-        }), true);
-});
-
-test('The cache of a current date must be false', t => {
-    t.is(isCachedInvalid(
-        1000, 'seconds', {
-            timestamp: moment().add(5000, 'seconds').toDate()
-        }), false);
-});
-
-
 test('Call two time a function must return the same result', async t => {
     let result = await cachedFunction(9);
     let result2 = await cachedFunction(9);
@@ -63,7 +34,6 @@ test('Call two time a function must return the same result', async t => {
     t.is(result, result2);
     t.is(result3, result4);
 });
-
 
 test('Call different cached must return different results', async t => {
     let result = await cachedFunction(10);
@@ -85,26 +55,10 @@ test('Diff cached must return diff results and call same functions with same ret
 });
 
 test('Call different cached must return different results', async t => {
-    let result = await shortCachedFunction(12);
-    let result2 = await Promise.delay(100).then(() => shortCachedFunction(12));
+    let result = await shortCachedFunction(1);
+    let result2 = await Promise.delay(100).then(() => shortCachedFunction(1));
     t.is(result === result2, true);
-    let result3 = await Promise.delay(2000).then(() => shortCachedFunction(12));
-
+    let result3 = await Promise.delay(2000).then(() => shortCachedFunction(1));
 
     t.is(result === result3, false);
-});
-
-test('For a diferent signature must return an exception', async t => {
-    t.throws(() => {
-        wrapper({}, () => 1, {}, () => 2);
-    });
-    t.throws(() => {
-        wrapper(() => 1, {}, {}, () => 2);
-    });
-    t.throws(() => {
-        wrapper(() => 1, () => 2, () => 3, () => 4);
-    });
-    t.throws(() => {
-        wrapper(() => 1, () => 2, {}, {});
-    });
 });
