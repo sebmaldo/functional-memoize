@@ -55,6 +55,16 @@ let checkSignatureOfFunction = (find, save, config, service) => {
     }
 };
 
+let extractResult = async (key, saveInCache, functionToMemoize, ...args) => {
+    //Fetch the results from the function if the cache is not valid
+    let result = await functionToMemoize(args);
+    //save in the cache with the cache stategy provided
+    await saveInCache(key, new Date(), result);
+    //Return the result of the function
+    return result;
+
+};
+
 
 /**
  * Function to wrapp the function to made the memoization with a provided cache strategy.
@@ -71,28 +81,30 @@ let checkSignatureOfFunction = (find, save, config, service) => {
  */
 let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) => {
     checkSignatureOfFunction(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize);
-    let extractResult = async (...args) => {
-
+    let keyGen = (...args) => {
+        return JSON.stringify(R.append(memoizeConfigOptions.functionName, args));
     };
-    return async (...args) => {
+
+    let wrappFunction =  async (...args) => {
         //Create the key, with the arguments of the function and the service name
-        let key = JSON.stringify(R.append(memoizeConfigOptions.functionName, args));
+        let key = keyGen(args);
         //Search in the cache stategy provided in the function
         let cached = await findInCache(key);
 
         //check if the cache is inValid according with the config object
         if (isCachedInvalid(memoizeConfigOptions.ttl, memoizeConfigOptions.ttlMeasure, cached)) {
-            //Fetch the results from the function if the cache is not valid
-            let result = await functionToMemoize(args);
-            //save in the cache with the cache stategy provided
-            await saveInCache(key, new Date(), result);
-            //Return the result of the function
-            return result;
+            return await extractResult(key, saveInCache, functionToMemoize, ...args);
         }
 
         //Return the cached result in case it is valid.
         return cached.result;
     };
+
+    wrappFunction.force = async (...args) => {
+        return await extractResult(keyGen(args), saveInCache, functionToMemoize, ...args);
+    };
+
+    return wrappFunction;
 };
 
 /**

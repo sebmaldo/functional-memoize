@@ -21,7 +21,7 @@ let cachedFunction2 = wrapper(
 );
 
 let shortCachedFunction = wrapper(
-     cachedStrategies.find
+    cachedStrategies.find
     , cachedStrategies.save
     , { ttl: 2, ttlMeasure: 'seconds', functionName: 'stringFunction' }
     , randomString
@@ -62,4 +62,14 @@ test('Call different cached must return different results', async t => {
     t.deepEqual(result, result2);
     let result3 = await Promise.delay(2500).then(() => shortCachedFunction(1));
     t.notDeepEqual(result, result3);
+});
+
+test('Call of force must return diferent result', async t => {
+    
+    let result = await shortCachedFunction(2);
+    let result2 = await shortCachedFunction.force(2);
+    let result3 = await shortCachedFunction(2);
+    t.is(result === result2, false);
+    t.is(result2 === result3, true);
+
 });

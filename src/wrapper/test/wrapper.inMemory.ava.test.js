@@ -62,3 +62,13 @@ test('Call different cached must return different results', async t => {
 
     t.is(result === result3, false);
 });
+
+test('Call of force must return diferent result', async t => {
+    
+    let result = await shortCachedFunction(2);
+    let result2 = await shortCachedFunction.force(2);
+    let result3 = await shortCachedFunction(2);
+    t.is(result === result2, false);
+    t.is(result2 === result3, true);
+
+});

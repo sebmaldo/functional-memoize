@@ -23,7 +23,8 @@ module.exports = {
      * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
-     * This function is always async, return a Promise.
+     * This function is always async, return a Promise. The returned function has an atribute force, this force atribute is a function 
+     * that force the use of the functionToMemoize and saveit in the cache.
      */
     cacheWrapper: wrapper,
 
@@ -37,7 +38,8 @@ module.exports = {
      * @param {string} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
-     * This function is always async, return a Promise.
+     * This function is always async, return a Promise. The returned function has an atribute force, this force atribute is a function 
+     * that force the use of the functionToMemoize and saveit in the cache.
      */
     inMemoryCacheWrapper: wrapper(strategies.find, strategies.save),
 
@@ -54,7 +56,8 @@ module.exports = {
      * @param {String} memoizeConfigOptions.functionName - The Implementation consider a unique cached.
      * @param {function} functionToMemoize - Function to be memoized by the cache wrapper.
      * @returns {function} - Function that wrapp the functionToMemoize with the strategy of cache.
-     * This function is always async, return a Promise.
+     * This function is always async, return a Promise. The returned function has an atribute force, this force atribute is a function 
+     * that force the use of the functionToMemoize and saveit in the cache.
      */
     inMongoCacheWrapper: R.curry((
         mongoDBConfig,

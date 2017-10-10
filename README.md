@@ -18,7 +18,8 @@ Curriable function to wrapp the function to be memoized with a provided cache st
 
 **Kind**: static method of [<code>functional-memoize</code>](#module_functional-memoize)  
 **Returns**: <code>function</code> - - Function that wrapp the functionToMemoize with the strategy of cache.
-This function is always async, return a Promise.  
+This function is always async, return a Promise. The returned function has an atribute force, this force atribute is a function 
+that force the use of the functionToMemoize and saveit in the cache.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -37,7 +38,8 @@ Curriable function to wrapp the function to be memoized with a in Memory cache s
 
 **Kind**: static method of [<code>functional-memoize</code>](#module_functional-memoize)  
 **Returns**: <code>function</code> - - Function that wrapp the functionToMemoize with the strategy of cache.
-This function is always async, return a Promise.  
+This function is always async, return a Promise. The returned function has an atribute force, this force atribute is a function 
+that force the use of the functionToMemoize and saveit in the cache.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -54,7 +56,8 @@ Curriable function to wrapp the function to be memoized with a mongodb cache str
 
 **Kind**: static method of [<code>functional-memoize</code>](#module_functional-memoize)  
 **Returns**: <code>function</code> - - Function that wrapp the functionToMemoize with the strategy of cache.
-This function is always async, return a Promise.  
+This function is always async, return a Promise. The returned function has an atribute force, this force atribute is a function 
+that force the use of the functionToMemoize and saveit in the cache.  
 
 | Param | Type | Description |
 | --- | --- | --- |
