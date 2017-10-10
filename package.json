@@ -4,11 +4,13 @@
   "description": "A module for the memoization of functions from a functional programming point of view, this module let you manage the cache type and strategy to use.",
   "main": "index.js",
   "scripts": {
-    "test": "ava **/inMemory.ava.test.js **/wrapper.ava.test.js  --verbose",
+    "test": "node_modules/.bin/nyc --reporter=lcov --reporter=text --check-coverage --lines 90 --functions 90 --branches 90 node node_modules/.bin/ava -v **/inMemory.ava.test.js **/wrapper.ava.test.js",
     "test:mongo": "ava **/inMongo.ava.test.js --verbose",
+    "test:all:coverage": "node_modules/.bin/nyc --reporter=lcov --reporter=text --check-coverage --lines 90 --functions 90 --branches 90 node node_modules/.bin/ava -v **/*.ava.test.js",
     "test:all:watch": "ava **/*.ava.test.js --verbose --watch",
     "test:docker": "docker-compose up memoize_app",
-    "build:docker" : "docker-compose build"
+    "build:docker": "docker-compose build",
+    "test:docker:coverage": "docker-compose up memoize_test_coverage"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
     "ava": "^0.22.0",
     "bluebird": "^3.5.0",
     "eslint": "^4.8.0",
+    "nyc": "^11.2.1",
     "rewire": "^2.5.2"
   }
 }
