@@ -1,4 +1,4 @@
-const R = require('rambda');
+const R = require('ramda');
 const moment = require('moment');
 const getTtlMeasure = R.defaultTo('days');
 const ttlDefault = R.defaultTo(1);
@@ -71,6 +71,9 @@ let checkSignatureOfFunction = (find, save, config, service) => {
  */
 let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) => {
     checkSignatureOfFunction(findInCache, saveInCache, memoizeConfigOptions, functionToMemoize);
+    let extractResult = async (...args) => {
+
+    };
     return async (...args) => {
         //Create the key, with the arguments of the function and the service name
         let key = JSON.stringify(R.append(memoizeConfigOptions.functionName, args));

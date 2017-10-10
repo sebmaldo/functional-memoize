@@ -26,7 +26,7 @@ services:
       dockerfile: Dockerfiles/Dockerfile
     volumes:
         - "./src:/opt/app/src"
-    command: dockerize -wait tcp://mongo:27017 /bin/sh -c "npm run test:all"
+    command: dockerize -wait tcp://mongo:27017 /bin/sh -c "npm run test:all:watch"
 
   # MongoDB database service configuration
   mongo:
