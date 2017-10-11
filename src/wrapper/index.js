@@ -57,7 +57,7 @@ let checkSignatureOfFunction = (find, save, config, service) => {
 
 let extractResult = async (key, saveInCache, functionToMemoize, ...args) => {
     //Fetch the results from the function if the cache is not valid
-    let result = await functionToMemoize(args);
+    let result = await functionToMemoize(...args);
     //save in the cache with the cache stategy provided
     await saveInCache(key, new Date(), result);
     //Return the result of the function
