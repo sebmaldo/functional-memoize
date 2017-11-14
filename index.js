@@ -68,11 +68,17 @@ module.exports = {
             mongoDBConfig.mongodbUri,
             mongoDBConfig.mongodbCacheCollection
         );
-        return wrapper(
+        let func = wrapper(
             mongoStrategy.find,
             mongoStrategy.save,
             memoizeConfigOptions,
             functionToMemoize
         );
+
+        func.close = () => {
+            mongoStrategy.close();
+        };
+
+        return func;
     })
 };

@@ -62,7 +62,6 @@ let extractResult = async (key, saveInCache, functionToMemoize, ...args) => {
     await saveInCache(key, new Date(), result);
     //Return the result of the function
     return result;
-
 };
 
 

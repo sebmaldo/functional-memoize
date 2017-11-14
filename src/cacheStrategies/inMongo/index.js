@@ -10,6 +10,9 @@ module.exports = (mongodbUri, mongodbCache = 'MONGODB_CACHE') => {
         save: async (key, timestamp, result) => {
             await collection.remove({ key });
             return await collection.insert({ key, timestamp, result });
+        },
+        close : async ()=> {
+            await collection.manager.close();
         }
     };
 };
