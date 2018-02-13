@@ -3,6 +3,40 @@ const moment = require('moment');
 const getTtlMeasure = R.defaultTo('days');
 const ttlDefault = R.defaultTo(1);
 
+let convertToError = (errorJson) => {
+    let errorSalida = null;
+    switch(errorJson.name){
+        case(Error.name):
+            errorSalida = new Error();
+            break;
+        case(RangeError.name):
+            errorSalida = new RangeError();
+            break;
+        case(ReferenceError.name):
+            errorSalida = new ReferenceError();
+            break;
+        case(SyntaxError.name):
+            errorSalida = new SyntaxError();
+            break;
+        case(TypeError.name):
+            errorSalida = new TypeError();
+            break;
+        case(URIError.name):
+            errorSalida = new URIError();
+            break;
+        default:
+            errorSalida = new Error();
+    }
+
+    for (const key in errorJson) {
+        if (errorJson.hasOwnProperty(key)) {
+            errorSalida[key] = errorJson[key];
+        }
+    }
+
+    return errorSalida;
+}
+
 
 /**
  * Check if a cached item is valid to return as result
@@ -57,9 +91,24 @@ let checkSignatureOfFunction = (find, save, config, service) => {
 
 let extractResult = async (key, saveInCache, functionToMemoize, ...args) => {
     //Fetch the results from the function if the cache is not valid
-    let result = await functionToMemoize(...args);
-    //save in the cache with the cache stategy provided
-    await saveInCache(key, new Date(), result);
+    let result = null;
+    try {
+        result = {
+            error: false,
+            data: await functionToMemoize(...args)
+        };
+    } catch (error) {
+        let errorKeys = Object.getOwnPropertyNames(error);
+        errorKeys.push('name');
+        result = {
+            error: true,
+            data: JSON.parse(JSON.stringify(error, errorKeys))
+        };
+    }
+    finally{
+        //save in the cache with the cache stategy provided
+        await saveInCache(key, new Date(), result);
+    }
     //Return the result of the function
     return result;
 };
@@ -84,27 +133,39 @@ let wrapp = (findInCache, saveInCache, memoizeConfigOptions, functionToMemoize) 
         return JSON.stringify(R.append(memoizeConfigOptions.functionName, args));
     };
 
+    let obtainResult = (obt)=> {
+        if (obt.error) {
+            throw convertToError(obt.data);
+        } else {
+            return (obt.data || obt);
+        }
+    }
+
     let wrappFunction =  async (...args) => {
         //Create the key, with the arguments of the function and the service name
         let key = keyGen(args);
         //Search in the cache stategy provided in the function
         let cached = await findInCache(key);
+        let salida = null;
 
         //check if the cache is inValid according with the config object
         if (isCachedInvalid(memoizeConfigOptions.ttl, memoizeConfigOptions.ttlMeasure, cached)) {
-            return await extractResult(key, saveInCache, functionToMemoize, ...args);
+            salida = await extractResult(key, saveInCache, functionToMemoize, ...args);
         }
 
-        //Return the cached result in case it is valid.
-        return cached.result;
+        return obtainResult(salida || cached.result);
+        
     };
 
     wrappFunction.force = async (...args) => {
-        return await extractResult(keyGen(args), saveInCache, functionToMemoize, ...args);
+        let forceResult = (await extractResult(keyGen(args), saveInCache, functionToMemoize, ...args)).data;
+        return obtainResult(forceResult);
     };
 
     return wrappFunction;
 };
+
+
 
 /**
  * Function to wrapp the function to made the memoization with a provided cache strategy.

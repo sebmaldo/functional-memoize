@@ -7,6 +7,14 @@ function randomString(largo) {
     return Math.random().toString(36).substring(largo);
 }
 
+function randomError() {
+    throw new Error(randomString(4));
+}
+
+function randomSyntaxError() {
+    throw new SyntaxError(randomString(4));
+}
+
 let cachedFunction = wrapper(cachedStrategies.find
     , cachedStrategies.save
     , { ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction' }
@@ -18,6 +26,19 @@ let cachedFunction2 = wrapper(
     cachedStrategies.save,
     { ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction2' },
     randomString
+);
+
+let cachedErrorFunction = wrapper(cachedStrategies.find
+    , cachedStrategies.save
+    , { ttl: 2, ttlMeasure: 'seconds', functionName: 'stringFunction' }
+    , randomError
+);
+
+let cachedErrorFunction2 = wrapper(
+    cachedStrategies.find,
+    cachedStrategies.save,
+    { ttl: 2, ttlMeasure: 'seconds', functionName: 'stringFunction2' },
+    randomSyntaxError
 );
 
 let shortCachedFunction = wrapper(
