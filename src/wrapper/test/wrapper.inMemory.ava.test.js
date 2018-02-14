@@ -7,6 +7,14 @@ function randomString(largo) {
     return Math.random().toString(36).substring(largo);
 }
 
+function randomError() {
+    throw new Error(randomString(4));
+}
+
+function randomSyntaxError() {
+    throw new SyntaxError(randomString(4));
+}
+
 let cachedFunction = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
     , { ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction' }
@@ -19,9 +27,22 @@ let cachedFunction2 = wrapper(cachedStrategies.inMemory.find
     , randomString
 );
 
+let cachedErrorFunction = wrapper(cachedStrategies.inMemory.find
+    , cachedStrategies.inMemory.save
+    , { ttl: 2, ttlMeasure: 'seconds', functionName: 'errorFunction' }
+    , randomError
+);
+
+let cachedErrorFunction2 = wrapper(
+    cachedStrategies.inMemory.find,
+    cachedStrategies.inMemory.save,
+    { ttl: 2, ttlMeasure: 'seconds', functionName: 'errorFunction2' },
+    randomSyntaxError
+);
+
 let shortCachedFunction = wrapper(cachedStrategies.inMemory.find
     , cachedStrategies.inMemory.save
-    , { ttl: 1, ttlMeasure: 'seconds', functionName: 'stringFunction' }
+    , { ttl: 1, ttlMeasure: 'seconds', functionName: 'shortFunction' }
     , randomString
 );
 
@@ -71,4 +92,42 @@ test('Call of force must return diferent result', async t => {
     t.is(result === result2, false);
     t.is(result2 === result3, true);
 
+});
+
+test('Call two time a error function must return the same error', async t => {
+
+    let e1;
+    try {
+        await cachedErrorFunction();
+    } catch (error) {
+        e1 = error;
+    }
+    
+    let e2;
+    try{
+        await cachedErrorFunction();
+    } catch(error){
+        e2 = error;
+    }
+    t.not(e1, undefined);
+    t.deepEqual(e1, e2);
+});
+
+test('Call two time a error function must return the same sytaxerror', async t => {
+
+    let e1;
+    try {
+        await cachedErrorFunction2();
+    } catch (error) {
+        e1 = error;
+    }
+    
+    let e2;
+    try{
+        await cachedErrorFunction2();
+    } catch(error){
+        e2 = error;
+    }
+    t.not(e1, undefined);
+    t.deepEqual(e1, e2);
 });

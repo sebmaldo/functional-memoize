@@ -3,29 +3,21 @@ const moment = require('moment');
 const getTtlMeasure = R.defaultTo('days');
 const ttlDefault = R.defaultTo(1);
 
+const errorMap = {
+    'Error': Error,
+    'RangeError': RangeError,
+    'ReferenceError': ReferenceError,
+    'SyntaxError': SyntaxError,
+    'TypeError': TypeError,
+    'URIError': URIError
+}
+
 let convertToError = (errorJson) => {
     let errorSalida = null;
-    switch(errorJson.name){
-        case(Error.name):
-            errorSalida = new Error();
-            break;
-        case(RangeError.name):
-            errorSalida = new RangeError();
-            break;
-        case(ReferenceError.name):
-            errorSalida = new ReferenceError();
-            break;
-        case(SyntaxError.name):
-            errorSalida = new SyntaxError();
-            break;
-        case(TypeError.name):
-            errorSalida = new TypeError();
-            break;
-        case(URIError.name):
-            errorSalida = new URIError();
-            break;
-        default:
-            errorSalida = new Error();
+    try {
+        errorSalida = new errorMap[errorJson.name]();
+    } catch (error) {
+        errorSalida = new Error();
     }
 
     for (const key in errorJson) {

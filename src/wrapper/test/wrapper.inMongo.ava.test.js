@@ -15,6 +15,12 @@ function randomSyntaxError() {
     throw new SyntaxError(randomString(4));
 }
 
+function randomOtherError() {
+    let err =  new SyntaxError(randomString(4));
+    err.name = 'EEEEEE';
+    throw err;
+}
+
 let cachedFunction = wrapper(cachedStrategies.find
     , cachedStrategies.save
     , { ttl: 2, ttlMeasure: 'days', functionName: 'stringFunction' }
@@ -30,21 +36,28 @@ let cachedFunction2 = wrapper(
 
 let cachedErrorFunction = wrapper(cachedStrategies.find
     , cachedStrategies.save
-    , { ttl: 2, ttlMeasure: 'seconds', functionName: 'stringFunction' }
+    , { ttl: 2, ttlMeasure: 'seconds', functionName: 'errorFunction' }
     , randomError
 );
 
 let cachedErrorFunction2 = wrapper(
     cachedStrategies.find,
     cachedStrategies.save,
-    { ttl: 2, ttlMeasure: 'seconds', functionName: 'stringFunction2' },
+    { ttl: 2, ttlMeasure: 'seconds', functionName: 'errorFunction2' },
     randomSyntaxError
+);
+
+let cachedErrorFunction3 = wrapper(
+    cachedStrategies.find,
+    cachedStrategies.save,
+    { ttl: 2, ttlMeasure: 'seconds', functionName: 'errorFunction3' },
+    randomOtherError
 );
 
 let shortCachedFunction = wrapper(
     cachedStrategies.find
     , cachedStrategies.save
-    , { ttl: 2, ttlMeasure: 'seconds', functionName: 'stringFunction' }
+    , { ttl: 2, ttlMeasure: 'seconds', functionName: 'shortFunction' }
     , randomString
 );
 
@@ -93,4 +106,62 @@ test('Call of force must return diferent result', async t => {
     t.is(result === result2, false);
     t.is(result2 === result3, true);
 
+});
+
+test('Call two time a error function must return the same error', async t => {
+
+    let e1;
+    try {
+        await cachedErrorFunction();
+    } catch (error) {
+        e1 = error;
+    }
+    
+    let e2;
+    try{
+        await cachedErrorFunction();
+    } catch(error){
+        e2 = error;
+    }
+    t.not(e1, undefined);
+    t.deepEqual(e1, e2);
+});
+
+test('Call two time a error function must return the same sytaxerror', async t => {
+
+    let e1;
+    try {
+        await cachedErrorFunction2();
+    } catch (error) {
+        e1 = error;
+    }
+    
+    let e2;
+    try{
+        await cachedErrorFunction2();
+    } catch(error){
+        e2 = error;
+    }
+    t.not(e1, undefined);
+    t.deepEqual(e1, e2);
+});
+
+
+test('Call two time a error function must return the same custom error', async t => {
+
+    let e1;
+    try {
+        await cachedErrorFunction3();
+    } catch (error) {
+        e1 = error;
+    }
+    
+    let e2;
+    try{
+        await cachedErrorFunction3();
+    } catch(error){
+        e2 = error;
+    }
+    t.not(e1, undefined);
+    t.deepEqual(e1, e2);
 });
