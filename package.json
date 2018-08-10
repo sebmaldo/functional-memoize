@@ -33,12 +33,12 @@
   },
   "homepage": "https://github.com/sebmaldo/functional-memoize#readme",
   "dependencies": {
-    "moment": "^2.18.1",
+    "moment": "^2.22.2",
     "monk": "^6.0.4",
     "ramda": "^0.25.0"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.25.0",
     "bluebird": "^3.5.0",
     "eslint": "^4.8.0",
     "nyc": "^11.2.1",
