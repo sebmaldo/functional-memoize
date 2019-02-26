@@ -9,7 +9,8 @@ test('Must return undefine to not seted cache', async t => {
     t.is(result, undefined);
 });
 
-test('Must return object in memory', async t => {
+test('Must return object with ritmo in memory', async t => {
+
     let key = JSON.stringify([
         'hola como va', 'que ritmo', 44444, true, { foo: 'baxx' },
         'the service name'
@@ -37,6 +38,7 @@ test('Must return object in memory', async t => {
 
     let result = await find(key);
     t.is(result.result, output);
+   
 });
 
 
